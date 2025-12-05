@@ -1,0 +1,62 @@
+﻿@model WebApplication1.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4">👋 Welcome</h1>
+            <p class="lead text-muted">Stock control is showing</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3 shadow h-100">
+                <div class="card-header">📦 Total Product</div>
+                <div class="card-body">
+                    <h2 class="card-title">@Model.TotalProducts</h2>
+                    <p class="card-text">Number of Product Quantities</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-danger mb-3 shadow h-100">
+                <div class="card-header">⚠️ critic Stock</div>
+                <div class="card-body">
+                    <h2 class="card-title">@Model.CriticalStockCount</h2>
+                    <p class="card-text"> stock number is under 10 </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3 shadow h-100">
+                <div class="card-header">🚚 Subcontractors </div>
+                <div class="card-body">
+                    <h2 class="card-title">@Model.TotalSubcontractors</h2>
+                    <p class="card-text"> working supplier list</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3 shadow h-100">
+                <div class="card-header">📋 total trasactions</div>
+                <div class="card-body">
+                    <h2 class="card-title">@Model.RecentLogsCount</h2>
+                    <p class="card-text">Logs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a asp-controller="Products" asp-action="Index" class="btn btn-lg btn-outline-dark">🚀 Go to Stock management</a>
+        </div>
+    </div>
+</div>

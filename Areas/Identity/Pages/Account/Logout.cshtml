@@ -1,0 +1,55 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Oturumu Kapat";
+}
+
+<style>
+    body {
+        background-color: #eef2f5;
+        font-family: 'Segoe UI', sans-serif;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0" style="border-radius: 15px;">
+
+                <div class="card-header bg-danger text-white text-center" style="border-radius: 15px 15px 0 0; padding: 20px;">
+                    <h3 class="m-0">🚪 Oturumu Kapat</h3>
+                </div>
+
+                <div class="card-body p-5 text-center">
+
+                    @if (User.Identity?.IsAuthenticated ?? false)
+                    {
+                        <h5 class="mb-4 text-secondary">Sistemden çıkış yapmak üzeresiniz.</h5>
+                        <p class="text-muted mb-4">Devam etmek istiyor musunuz?</p>
+
+                        <form class="form-inline justify-content-center" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                            <button type="submit" class="btn btn-danger btn-lg px-5 shadow-sm" style="border-radius: 50px;">
+                                Evet, Çıkış Yap
+                            </button>
+                            <br /><br />
+                            <a href="/" class="text-decoration-none text-muted">Vazgeç ve Ana Sayfaya Dön</a>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="mb-4">
+                            <span style="font-size: 4rem;">✅</span>
+                        </div>
+                        <h4 class="text-success mb-3">Başarıyla Çıkış Yapıldı.</h4>
+                        <p class="text-muted">Güvenli bir şekilde oturumunuz sonlandırıldı.</p>
+
+                        <a href="/Identity/Account/Login" class="btn btn-primary btn-lg mt-3 px-5 shadow-sm" style="border-radius: 50px;">
+                            Tekrar Giriş Yap
+                        </a>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,262 @@
+﻿@model IEnumerable<WebApplication1.Models.Product>
+
+@{
+    ViewData["Title"] = "Management Stock";
+}
+
+<style>
+    body {
+        background-color: #eef2f5;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .header-area {
+        background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .create-btn {
+        background: #fff;
+        color: #182848;
+        padding: 10px 20px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .create-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            color: #4b6cb7;
+        }
+
+    .board-container {
+        display: flex;
+        gap: 20px;
+    }
+
+    .bin-column {
+        flex: 1;
+        background: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        min-height: 400px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .bin-header {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #eee;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .product-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: grab;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        border-left: 5px solid;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+        .product-card:active {
+            cursor: grabbing;
+            transform: scale(0.98);
+        }
+
+    .available-card {
+        border-left: 5px solid #28a745 !important;
+    }
+
+    .out-card {
+        border-left: 5px solid #dc3545 !important;
+    }
+
+    .tag {
+        font-size: 0.8rem;
+        padding: 2px 8px;
+        background: #f0f0f0;
+        border-radius: 4px;
+        color: #666;
+    }
+</style>
+
+<div class="container-fluid mt-3">
+
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <form asp-action="Index" method="get">
+                <div class="input-group shadow-sm">
+                    <input type="text" name="searchString" class="form-control border-0"
+                           placeholder="🔍 Search with Product Name..."
+                           value="@ViewData["CurrentFilter"]"
+                           style="padding: 15px; border-radius: 30px 0 0 30px;">
+                    <button type="button" class="btn btn-primary" onclick="this.form.submit()" style="border-radius: 0 30px 30px 0; padding: 0 30px;">Ara</button>
+                    @if (ViewData["CurrentFilter"] != null)
+                    {
+                        <a asp-action="Index" class="btn btn-secondary ms-2" style="border-radius: 30px; padding: 10px 20px; display:flex; align-items:center;">Delete</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="header-area">
+        <div>
+            <h2 class="m-0">📦 Product Management Panel</h2>
+            <small>drag and drop</small>
+        </div>
+        <a asp-action="Create" class="create-btn">+ ADD New Product</a>
+    </div>
+
+    <div class="board-container">
+        <div class="bin-column" id="bin-available" ondrop="drop(event, 'available')" ondragover="allowDrop(event)">
+            <div class="bin-header text-success">
+                ✅ In Stocks
+                <span id="count-available" class="badge bg-success">@Model.Count(x => x.Availability == true)</span>
+            </div>
+            @foreach (var item in Model.Where(x => x.Availability == true))
+            {
+                <div class="product-card available-card" draggable="true" ondragstart="drag(event)" id="prod-@item.ProductId">
+                    <h5>@item.Type</h5>
+                    <div class="d-flex justify-content-between">
+                        <span class="tag">Stok: @item.Stock</span>
+                        <small>#@item.ProductId</small>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="bin-column" id="bin-out" ondrop="drop(event, 'out')" ondragover="allowDrop(event)">
+            <div class="bin-header text-danger">
+                ⚠️ Out of Stock
+                <span id="count-out" class="badge bg-danger">@Model.Count(x => x.Availability != true)</span>
+            </div>
+            @foreach (var item in Model.Where(x => x.Availability != true))
+            {
+                <div class="product-card out-card" draggable="true" ondragstart="drag(event)" id="prod-@item.ProductId">
+                    <h5>@item.Type</h5>
+                    <div class="d-flex justify-content-between">
+                        <span class="tag">Stok: @item.Stock</span>
+                        <small>#@item.ProductId</small>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    // ... (drag ve allowDrop fonksiyonları aynı kalsın) ...
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    function allowDrop(ev) { ev.preventDefault(); }
+
+    function drop(ev, status) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var card = document.getElementById(data);
+        var stockTag = card.querySelector('.tag');
+
+        var countAvEl = document.getElementById('count-available');
+        var countOutEl = document.getElementById('count-out');
+        var valAv = parseInt(countAvEl.innerText);
+        var valOut = parseInt(countOutEl.innerText);
+
+        // --- GÜVENLİ SAYI ALMA FONKSİYONU ---
+        // Kullanıcı saçma bir şey yazarsa işlemi durdurur
+        function getValidNumber(message) {
+            var input = prompt(message, "1");
+            if (input === null) return null; // İptal'e bastı
+            var number = parseInt(input);
+            if (isNaN(number) || number < 0) {
+                alert("Lütfen geçerli bir sayı giriniz!");
+                return null;
+            }
+            return number;
+        }
+
+        // Görsel Taşıma
+        if (ev.target.className.includes("bin-column")) { ev.target.appendChild(card); }
+        else { ev.target.closest(".bin-column").appendChild(card); }
+
+        // Mevcut stoğu oku
+        var currentStock = parseInt(stockTag.innerText.replace('Stock: ', ''));
+        if (isNaN(currentStock)) currentStock = 0;
+
+        if(status === 'available') {
+            // --- YEŞİLE GELDİ ---
+            var miktar = getValidNumber("Update ");
+            if (miktar === null) { location.reload(); return; } // Hatalıysa sayfayı yenile
+
+            var yeniStok = currentStock + miktar; // Üzerine ekle
+
+            stockTag.innerText = "Stok: " + yeniStok;
+            card.classList.remove('out-card');
+            card.classList.add('available-card');
+            card.style.borderLeftColor = "#28a745";
+
+            if (currentStock === 0) {
+                countAvEl.innerText = valAv + 1;
+                countOutEl.innerText = valOut - 1;
+            }
+
+            updateDatabase(card.id, true, yeniStok);
+            if (typeof showToast === "function") showToast("Successed", miktar + " added.", "success");
+
+        } else {
+            // --- KIRMIZIYA GELDİ ---
+            var miktar = getValidNumber("How Many Products were sold");
+            if (miktar === null) { location.reload(); return; }
+
+            var kalan = currentStock - miktar;
+
+            if (kalan > 0) {
+                // Hala var -> Yeşile geri at
+                stockTag.innerText = "Stock: " + kalan;
+                document.getElementById('bin-available').appendChild(card);
+
+                updateDatabase(card.id, true, kalan);
+                if (typeof showToast === "function") showToast(, miktar + " sold. Remaining: " + kalan, "warning");
+            } else {
+                // Bitti -> Kırmızıda kalsın
+                stockTag.innerText = "Stock: 0";
+                card.classList.remove('available-card');
+                card.classList.add('out-card');
+                card.style.borderLeftColor = "#dc3545";
+
+                countAvEl.innerText = valAv - 1;
+                countOutEl.innerText = valOut + 1;
+
+                updateDatabase(card.id, false, 0);
+                if (typeof showToast === "function") showToast("Out of Stock", "danger");
+            }
+        }
+    }
+
+    function updateDatabase(elementId, isAvailable, stockValue) {
+        var realId = elementId.split('-')[1];
+        fetch('/Products/UpdateStatus', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `id=${realId}&status=${isAvailable}&newStock=${stockValue}`
+        }).then(response => {
+            if (response.ok) console.log("Database  updated! ✅");
+            //else if (typeof showToast === "function") showToast("Exception", "Kaydedilemedi!", "danger");
+        });
+    }
+</script>

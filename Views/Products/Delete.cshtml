@@ -1,0 +1,110 @@
+﻿@model WebApplication1.Models.Product
+
+@{
+    ViewData["Title"] = "Delete the Product";
+}
+
+<style>
+    body {
+        background-color: #eef2f5;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .delete-card {
+        max-width: 500px;
+        margin: 60px auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .card-header-danger {
+        background: #ff416c;
+        background: linear-gradient(to right, #ff4b1f, #ff9068);
+        padding: 30px;
+        color: white;
+    }
+
+    .card-body {
+        padding: 40px;
+    }
+
+    .warning-icon {
+        font-size: 4rem;
+        margin-bottom: 10px;
+        opacity: 0.8;
+    }
+
+    .item-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333;
+        margin: 10px 0;
+    }
+
+    .item-detail {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+
+    .btn-danger-custom {
+        background-color: #ff4b1f;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        transition: 0.3s;
+        width: 100%;
+        display: block;
+    }
+
+        .btn-danger-custom:hover {
+            background-color: #d12e08;
+            transform: scale(1.02);
+        }
+
+    .btn-cancel {
+        margin-top: 15px;
+        color: #777;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 0.9rem;
+    }
+
+        .btn-cancel:hover {
+            text-decoration: underline;
+            color: #333;
+        }
+</style>
+
+<div class="container">
+    <div class="delete-card">
+        <div class="card-header-danger">
+            <div class="warning-icon">🗑️</div>
+            <h2 class="m-0">Are you sure?</h2>
+        </div>
+
+        <div class="card-body">
+            <p class="text-muted"></p>
+
+            <div class="item-title">@Model.Type</div>
+            <div class="item-detail">
+                Stok Adedi: <b>@Model.Stock</b> <br />
+                Durum: @(Model.Availability == true ? "available" : "out of stock")
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="ProductId" />
+                <button type="submit" class="btn-danger-custom">yes, Delete</button>
+            </form>
+
+            <a asp-action="Index" class="btn-cancel">No, cancel</a>
+        </div>
+    </div>
+</div>

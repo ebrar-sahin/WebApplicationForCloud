@@ -1,0 +1,131 @@
+﻿@model WebApplication1.Models.Product
+
+@{
+    ViewData["Title"] = "ADD New Product";
+}
+
+<style>
+    body {
+        background-color: #eef2f5;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .form-container {
+        max-width: 700px;
+        margin: 40px auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    .form-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .form-body {
+        padding: 40px;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #34495e;
+        margin-bottom: 8px;
+    }
+
+    .form-control, .form-select {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #dfe6e9;
+        background-color: #fdfdfd;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #4ca1af;
+            box-shadow: 0 0 0 3px rgba(76, 161, 175, 0.2);
+        }
+
+    .btn-submit {
+        background: #2c3e50;
+        color: white;
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn-submit:hover {
+            background: #34495e;
+            transform: translateY(-2px);
+        }
+
+    .info-text {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+        margin-top: 5px;
+    }
+</style>
+
+<div class="container">
+    <div class="form-container">
+        <div class="form-header">
+            <h2 class="m-0">✨ New Product Entry</h2>
+            <p class="mb-0 opacity-75">Enter Stock Entities</p>
+        </div>
+
+        <div class="form-body">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-4">
+                    <label asp-for="Type" class="form-label"> Product Name / Type</label>
+                    <input asp-for="Type" class="form-control" placeholder="Örn: Wireless Mouse" required />
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Stock" class="form-label">Stock quantity</label>
+                    <input asp-for="Stock" class="form-control" type="number" placeholder="0" min="0" />
+                    <div class="info-text">
+                        ℹ️ <b>Automatic Status:</b> 0 girerseniz "Out of stock", 1 ve üzeri girerseniz "Stokta Var" olarak kaydedilir.
+                    </div>
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Material</label>
+                        <select asp-for="MaterialId" class="form-control" asp-items="ViewBag.Materials"><option value="">-- select --</option></select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Subcontractor</label>
+                        <select asp-for="SubcontractorId" class="form-control" asp-items="ViewBag.Subcontractors"><option value="">-- select --</option></select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">invoice</label>
+                        <select asp-for="InvoiceId" class="form-control" asp-items="ViewBag.Invoices"><option value="">-- select --</option></select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit mt-2">💾 Save </button>
+                <div class="text-center mt-3">
+                    <a asp-action="Index" class="text-decoration-none text-secondary">Cancel / Go back to list</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

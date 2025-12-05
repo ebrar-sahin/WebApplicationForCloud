@@ -1,0 +1,77 @@
+﻿@model WebApplication1.Models.Product
+
+@{
+    ViewData["Title"] = "Update the Product";
+}
+
+<style>
+    body {
+        background-color: #eef2f5;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .btn-save {
+        background: #f39c12;
+        color: white;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn-save:hover {
+            background: #d35400;
+        }
+</style>
+
+<div class="container">
+    <div class="form-container">
+        <h3 class="text-center mb-4 text-warning">✏️ Update stock</h3>
+
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="ProductId" />
+
+            <div class="mb-3">
+                <label asp-for="Type" class="form-label fw-bold">Product Name</label>
+                <input asp-for="Type" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Stock" class="form-label fw-bold">Stock entities</label>
+                <input asp-for="Stock" class="form-control" type="number" min="0" />
+                <small class="text-muted"></small>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label small">Materyal ID</label>
+                    <input asp-for="MaterialId" class="form-control" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small">Subcontractor ID</label>
+                    <input asp-for="SubcontractorId" class="form-control" readonly />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small"> Invoice ID</label>
+                    <input asp-for="InvoiceId" class="form-control" readonly />
+                </div>
+            </div>
+
+            <button type="submit" class="btn-save">Save Update</button>
+            <a asp-action="Index" class="d-block text-center mt-3 text-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

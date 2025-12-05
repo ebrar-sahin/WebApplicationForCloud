@@ -1,0 +1,33 @@
+﻿@model WebApplication1.Models.Subcontractor
+@{
+    ViewData["Title"] = "Firma Ekle";
+}
+
+<div class="container mt-4" style="max-width:600px;">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+            <h4>🏢 Yeni Tedarikçi Ekle</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create">
+                <div class="mb-3">
+                    <label class="form-label">Firma Adı</label>
+                    <input asp-for="Name" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">E-Posta</label>
+                    <input asp-for="Email" class="form-control" type="email" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Adres</label>
+                    <textarea asp-for="Address" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Posta Kodu</label>
+                    <input asp-for="PostalCode" class="form-control" />
+                </div>
+                <button type="submit" class="btn btn-success w-100">Kaydet</button>
+            </form>
+        </div>
+    </div>
+</div>

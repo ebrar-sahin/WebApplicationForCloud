@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WarehouseBoard</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WarehouseBoard.styles.css" asp-append-version="true" />
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary shadow-sm mb-3" style="padding: 0.8rem 1rem;">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-warning" asp-area="" asp-controller="Home" asp-action="Index" style="font-size: 1.5rem;">
+                    📦 WarehouseBoard
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">🏠 home page</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Products" asp-action="Index">📦 Stock Management</a>
+                        </li>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="History" asp-action="Index">📋 History</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item d-flex align-items-center me-3 border-end border-secondary pe-3">
+
+                                <a class="btn btn-sm btn-outline-info me-2" asp-controller="Subcontractors" asp-action="Index">
+                                    🚚 Subcontroller
+                                </a>
+
+                                <a class="btn btn-sm btn-outline-warning" asp-controller="Admin" asp-action="Index">
+                                    👥 User
+                                </a>
+                            </li>
+                        }
+
+                        <partial name="_LoginPartial" />
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-top: 20px;">
+                    <strong>Başarılı!</strong> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - WarehouseBoard - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var successMsg = '@TempData["SuccessMessage"]';
+            var errorMsg = '@TempData["ErrorMessage"]';
+
+            if (successMsg) showToast("Success", successMsg, "success");
+            if (errorMsg) showToast("Exception", errorMsg, "danger");
+        });
+
+        function showToast(title, message, type) {
+            var existingToast = document.getElementById('liveToast');
+            if (existingToast) existingToast.remove();
+
+            var toastHTML = `
+                <div id="liveToast" class="toast align-items-center text-white bg-${type} border-0 position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 9999;">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <strong style="font-size:1.1em;">${title}</strong><br/>
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', toastHTML);
+            var toastElement = document.getElementById('liveToast');
+            var toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+    </script>
+</body>
+</html>
