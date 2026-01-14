@@ -72,8 +72,7 @@ Migration files, ensuring database synchronization. <br>
 • Authorization Logic: Timing errors during the role assignment of the Admin user were 
 resolved by refactoring the application's startup (Seed) codes and bootstrapping the database 
 with a clean start.<br>
-VI. 
- 
+VI.  
 USER INTERFACE AND FUNCTIONAL SCREENS (UI/UX) <br>
 The WIMS project presents its complex background business logic and robust architecture to the end-user through a 
 user-friendly, modern interface compatible with "Dark Mode". To maximize User Experience (UX), classic static pages 
@@ -133,7 +132,7 @@ own accounts). <br>
 Supplier Management: Information regarding logistics companies supplying products is managed here. The selection 
 lists on the product entry screen are dynamically populated from this data.<br>
 <img width="693" height="364" alt="image" src="https://github.com/user-attachments/assets/00c9b9e7-cb4f-454b-a4ba-b0c5c0bc647a" /> <br>
-VII. 
+7. 
 CONCLUSION <br>
 The WIMS project is an integrated solution bringing together modern web technologies, secure coding 
 standards, and corporate design patterns. It not only meets functional requirements but also establishes a 
